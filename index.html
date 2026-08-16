@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#7a1220" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>지금은 전쟁중 — 깨어 하나되자!</title>
+<style>
+  :root{
+    --bg:#f6f1ea;
+    --card:#ffffff;
+    --ink:#1d1a17;
+    --ink-2:#5d554c;
+    --line:#e2d9cd;
+    --accent:#7a1220;
+    --accent-soft:#f6e6e6;
+    --gold:#a9762c;
+    --ok:#1f7a4d;
+    --ok-soft:#e4f2ea;
+    --warn:#b26a00;
+    --warn-soft:#fdf0dc;
+    --blue:#1c5b96;
+    --blue-soft:#e5eef7;
+    --gray-soft:#efeae3;
+    --fs:19px;
+    --r:16px;
+    --tap:54px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,-apple-system,sans-serif;
+    font-size:var(--fs); line-height:1.55;
+    -webkit-text-size-adjust:100%;
+    padding-bottom:calc(84px + env(safe-area-inset-bottom));
+  }
+  button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+  button{cursor:pointer;border:none;background:none}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:40;
+    background:linear-gradient(160deg,#7a1220,#4a0c15);
+    color:#fff; padding:calc(10px + env(safe-area-inset-top)) 14px 12px;
+    box-shadow:0 2px 14px rgba(0,0,0,.18);
+  }
+  .h-top{display:flex;align-items:center;gap:10px}
+  .h-title{font-size:20px;font-weight:800;letter-spacing:-.4px;line-height:1.25;flex:1}
+  .h-title small{display:block;font-size:12.5px;font-weight:600;opacity:.75;letter-spacing:1.5px;margin-bottom:2px}
+  .me-btn{
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+    color:#fff;border-radius:999px;padding:9px 14px;font-size:16px;font-weight:700;white-space:nowrap;
+  }
+  .h-date{display:flex;align-items:center;gap:8px;margin-top:10px}
+  .h-date button{
+    background:rgba(255,255,255,.14);color:#fff;border-radius:12px;
+    width:44px;height:42px;font-size:20px;font-weight:700;line-height:1;
+  }
+  .h-date .d-label{flex:1;text-align:center;font-size:17px;font-weight:700}
+  .h-date .d-label span{opacity:.7;font-weight:600;font-size:14px}
+  .conn{display:flex;align-items:center;gap:6px;font-size:12.5px;margin-top:8px;opacity:.9}
+  .dot{width:9px;height:9px;border-radius:50%;background:#8bd6a5;display:inline-block}
+  .dot.off{background:#f0c14b}
+
+  /* ---------- layout ---------- */
+  main{padding:14px 12px 24px;max-width:820px;margin:0 auto}
+  .panel{display:none}
+  .panel.on{display:block}
+  .sect-h{font-size:14px;font-weight:800;color:var(--ink-2);letter-spacing:.5px;margin:22px 4px 10px;text-transform:none}
+  .sect-h:first-child{margin-top:4px}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    margin-bottom:14px;overflow:hidden;box-shadow:0 1px 3px rgba(60,40,20,.05);
+  }
+  .card-h{display:flex;align-items:flex-start;gap:11px;padding:15px 15px 12px;border-bottom:1px solid var(--line);background:#fffdfa}
+  .card-h .ico{font-size:24px;line-height:1.1}
+  .card-h .tt{flex:1;min-width:0}
+  .card-h .tt b{display:block;font-size:19px;font-weight:800;letter-spacing:-.3px}
+  .card-h .tt span{font-size:14.5px;color:var(--ink-2);font-weight:600}
+  .pill{
+    font-size:13px;font-weight:800;padding:5px 11px;border-radius:999px;white-space:nowrap;
+    background:var(--gray-soft);color:var(--ink-2);
+  }
+  .pill.done{background:var(--ok-soft);color:var(--ok)}
+  .pill.chg{background:var(--warn-soft);color:var(--warn)}
+
+  .blk{padding:14px 15px;border-bottom:1px dashed var(--line)}
+  .blk:last-child{border-bottom:none}
+  .blk-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+  .blk-h b{font-size:17.5px;font-weight:800;flex:1;min-width:110px}
+  .tinput{
+    border:2px solid var(--line);border-radius:12px;padding:8px 10px;
+    font-size:17px;font-weight:800;background:#fff;min-height:46px;
+  }
+  .tinput:focus{outline:none;border-color:var(--accent)}
+  .del-x{background:var(--gray-soft);border-radius:10px;width:42px;height:42px;font-size:17px;color:var(--ink-2)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:11px}
+  .chip{
+    border:2px solid var(--line);background:#fff;border-radius:999px;
+    padding:10px 15px;font-size:16.5px;font-weight:700;color:var(--ink-2);
+    min-height:48px;display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .chip.on::before{content:"✓";font-weight:900}
+  .note{
+    width:100%;border:2px solid var(--line);border-radius:12px;padding:12px;
+    font-size:16.5px;line-height:1.55;background:#fffdfa;resize:vertical;min-height:64px;
+  }
+  .note:focus{outline:none;border-color:var(--accent);background:#fff}
+  .meta{font-size:13px;color:#9a9086;margin-top:8px}
+  .hint{font-size:14px;color:var(--warn);background:var(--warn-soft);border-radius:10px;padding:9px 12px;margin-top:10px;font-weight:700}
+
+  .btn{
+    display:block;width:100%;min-height:var(--tap);border-radius:14px;
+    background:var(--accent);color:#fff;font-size:17px;font-weight:800;padding:14px;
+  }
+  .btn.ghost{background:#fff;border:2px solid var(--line);color:var(--ink)}
+  .btn.soft{background:var(--accent-soft);color:var(--accent)}
+  .btn.small{min-height:46px;font-size:15.5px;padding:10px}
+  .row2{display:flex;gap:10px}
+  .row2>*{flex:1}
+
+  /* ---------- status board ---------- */
+  .my{background:linear-gradient(160deg,#fff,#fdf6ee);border:2px solid var(--gold);}
+  .st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:9px}
+  .st-btn{
+    border:2px solid var(--line);background:#fff;border-radius:14px;
+    min-height:60px;font-size:16.5px;font-weight:800;color:var(--ink-2);padding:8px 4px;
+  }
+  .st-btn.on{color:#fff}
+  .mem-row{display:flex;align-items:center;gap:11px;padding:13px 15px;border-bottom:1px dashed var(--line)}
+  .mem-row:last-child{border-bottom:none}
+  .av{
+    width:46px;height:46px;border-radius:14px;background:var(--gray-soft);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--ink-2);flex-shrink:0;
+  }
+  .mem-row .nm{flex:1;min-width:0}
+  .mem-row .nm b{display:block;font-size:17px;font-weight:800}
+  .mem-row .nm span{display:block;font-size:14px;color:#9a9086;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stag{font-size:14.5px;font-weight:800;padding:7px 12px;border-radius:999px;white-space:nowrap}
+
+  /* ---------- rsvp ---------- */
+  .rsvp{display:flex;gap:9px}
+  .rsvp button{
+    flex:1;min-height:56px;border-radius:14px;border:2px solid var(--line);
+    background:#fff;font-size:17px;font-weight:800;color:var(--ink-2)
+  }
+  .rsvp button.on.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+  .rsvp button.on.no{background:#8a8078;border-color:#8a8078;color:#fff}
+  .rsvp button.on.maybe{background:var(--warn);border-color:var(--warn);color:#fff}
+  .rs-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .rs-t{font-size:14.5px;font-weight:700;padding:6px 11px;border-radius:999px;background:var(--gray-soft);color:var(--ink-2)}
+  .rs-t.yes{background:var(--ok-soft);color:var(--ok)}
+  .rs-t.no{background:#eceae7;color:#8a8078}
+  .rs-t.maybe{background:var(--warn-soft);color:var(--warn)}
+
+  .duty{display:flex;gap:10px;padding:12px 15px;border-bottom:1px dashed var(--line);align-items:center}
+  .duty:last-child{border-bottom:none}
+  .duty .lb{font-size:14px;font-weight:800;color:#fff;background:var(--accent);border-radius:8px;padding:5px 10px;white-space:nowrap}
+  .duty .lb.sub{background:var(--gold)}
+  .duty .lb.emg{background:#8a8078}
+  .duty .vv{font-size:17px;font-weight:700}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:rgba(255,255,255,.97);border-top:1px solid var(--line);
+    display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    backdrop-filter:blur(8px);
+  }
+  nav button{flex:1;padding:7px 2px;border-radius:12px;color:#9a9086;font-size:11.5px;font-weight:800}
+  nav button b{display:block;font-size:22px;line-height:1.25;font-weight:500}
+  nav button.on{color:var(--accent);background:var(--accent-soft)}
+
+  /* ---------- overlay ---------- */
+  .ov{position:fixed;inset:0;z-index:100;background:rgba(30,20,15,.55);display:none;align-items:flex-end}
+  .ov.on{display:flex}
+  .sheet{
+    background:var(--bg);width:100%;max-height:88vh;overflow:auto;
+    border-radius:22px 22px 0 0;padding:20px 16px calc(24px + env(safe-area-inset-bottom));
+  }
+  .sheet h3{margin:0 0 4px;font-size:21px;font-weight:800}
+  .sheet p.sub{margin:0 0 16px;color:var(--ink-2);font-size:15px}
+  .pick{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+  .pick button{border:2px solid var(--line);background:#fff;border-radius:14px;min-height:58px;font-size:17.5px;font-weight:800}
+  .pick button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .fam-tag{font-size:12.5px;color:#9a9086;font-weight:700;grid-column:1/-1;margin-top:6px}
+  .ta-cfg{width:100%;min-height:150px;border:2px solid var(--line);border-radius:12px;padding:12px;font-family:ui-monospace,Menlo,monospace;font-size:13.5px}
+  code.k{background:var(--gray-soft);padding:2px 6px;border-radius:6px;font-size:14px}
+  .toast{
+    position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(14px);
+    background:#241c17;color:#fff;padding:13px 20px;border-radius:999px;font-size:15.5px;font-weight:700;
+    opacity:0;pointer-events:none;transition:.22s;z-index:200;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.25)
+  }
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  .empty{text-align:center;color:#9a9086;font-size:15.5px;padding:26px 12px}
+  .verse{
+    background:linear-gradient(160deg,#2c1a12,#4a0c15);color:#f3e6d6;border-radius:var(--r);
+    padding:16px 17px;margin-bottom:16px;font-size:16px;line-height:1.65;
+  }
+  .verse b{display:block;font-size:13px;letter-spacing:1px;opacity:.7;margin-bottom:6px;font-weight:800}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-top">
+    <div class="h-title"><small>지금은 전쟁중</small>깨어 하나되자!</div>
+    <button class="me-btn" id="meBtn">나 선택</button>
+  </div>
+  <div class="h-date">
+    <button id="dPrev" aria-label="이전 날">‹</button>
+    <div class="d-label" id="dLabel"></div>
+    <button id="dNext" aria-label="다음 날">›</button>
+  </div>
+  <div class="conn"><i class="dot" id="cDot"></i><span id="cTxt">연결 확인 중…</span></div>
+</header>
+
+<main>
+  <section class="panel on" id="p-today"></section>
+  <section class="panel" id="p-status"></section>
+  <section class="panel" id="p-meeting"></section>
+  <section class="panel" id="p-visit"></section>
+  <section class="panel" id="p-log"></section>
+</main>
+
+<nav>
+  <button class="on" data-tab="today"><b>🕯️</b>오늘 일정</button>
+  <button data-tab="status"><b>📍</b>실시간 현황</button>
+  <button data-tab="meeting"><b>⛪</b>기도모임</button>
+  <button data-tab="visit"><b>🏥</b>병원 심방</button>
+  <button data-tab="log"><b>📖</b>기록·설정</button>
+</nav>
+
+<div class="ov" id="ovLogin" style="align-items:center;background:linear-gradient(160deg,#2c1a12,#4a0c15)">
+  <div style="width:100%;max-width:420px;margin:0 auto;padding:24px 22px;color:#f3e6d6;text-align:center">
+    <div style="font-size:13px;letter-spacing:2px;opacity:.7;font-weight:800">지금은 전쟁중</div>
+    <div style="font-size:29px;font-weight:800;margin:6px 0 26px">깨어 하나되자!</div>
+    <div style="font-size:16.5px;opacity:.85;margin-bottom:14px">공동 암호를 입력해 주세요</div>
+    <input id="pwIn" type="password" inputmode="text" autocomplete="current-password"
+      style="width:100%;min-height:60px;border-radius:14px;border:2px solid rgba(255,255,255,.3);
+             background:rgba(255,255,255,.1);color:#fff;font-size:21px;font-weight:800;
+             text-align:center;padding:12px;letter-spacing:3px" placeholder="● ● ● ●" />
+    <div id="pwMsg" style="min-height:24px;font-size:14.5px;color:#ffc9c9;margin:10px 0 4px"></div>
+    <button id="pwGo" style="width:100%;min-height:58px;border-radius:14px;background:#fff;color:#7a1220;font-size:18px;font-weight:800">들어가기</button>
+    <div style="font-size:13.5px;opacity:.6;margin-top:18px;line-height:1.6">
+      한 번 입력하면 이 기기에서는 다시 묻지 않습니다.<br>암호는 담당자에게 문의하세요.
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ovMe"><div class="sheet">
+  <h3>나는 누구인가요?</h3>
+  <p class="sub">이름을 한 번만 선택하면 이 기기에 저장됩니다.</p>
+  <div class="pick" id="pickList"></div>
+  <button class="btn ghost" id="meClose">닫기</button>
+</div></div>
+
+<div class="ov" id="ovCfg"><div class="sheet">
+  <h3>Firebase 연결 설정</h3>
+  <p class="sub">Firebase 콘솔에서 복사한 <code class="k">firebaseConfig</code> 내용을 아래에 붙여넣고 저장하세요. 모든 구성원이 같은 설정을 쓰면 실시간으로 공유됩니다.</p>
+  <textarea class="ta-cfg" id="cfgTa" placeholder='{&#10;  "apiKey": "AIza...",&#10;  "authDomain": "myproject.firebaseapp.com",&#10;  "databaseURL": "https://myproject-default-rtdb.firebaseio.com",&#10;  "projectId": "myproject"&#10;}'></textarea>
+  <div style="height:12px"></div>
+  <button class="btn" id="cfgSave">저장하고 연결하기</button>
+  <div style="height:9px"></div>
+  <button class="btn ghost" id="cfgClose">닫기</button>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =======================================================================
+   지금은 전쟁중 — 깨어 하나되자!
+   교회 공동체 비상 기도 관리 프로그램
+   -----------------------------------------------------------------------
+   ▶ Firebase를 여기에 직접 넣어두면 구성원들은 아무 설정 없이 바로 씁니다.
+     아래 FIREBASE_CONFIG의 null 을 콘솔에서 복사한 설정 객체로 바꾸세요.
+   ======================================================================= */
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyB8q86RLlApD5aQv0ZDIpox7DK2esF2D_E",
+  authDomain: "war-prayer.firebaseapp.com",
+  databaseURL: "https://war-prayer-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "war-prayer",
+  storageBucket: "war-prayer.firebasestorage.app",
+  messagingSenderId: "882524845610",
+  appId: "1:882524845610:web:0559ab082cccaf1af93553"
+};
+var ROOM = "hana2026-w7k3q9";   // 우리 공동체 전용 방 이름 (바꾸면 기존 기록과 분리됩니다)
+
+/* ---------- 구성원 (이름 수정/추가는 이 목록만 고치면 됩니다) ---------- */
+var MEMBERS = [
+  {id:"pastor",   name:"목사님",   fam:1},
+  {id:"debora",   name:"드보라",   fam:1},
+  {id:"daeyang",  name:"오대양",   fam:1},
+  {id:"joshua",   name:"여호수아", fam:1},
+  {id:"abraham",  name:"아브라함", fam:2},
+  {id:"ruth",     name:"룻",       fam:2},
+  {id:"israel",   name:"이스라엘", fam:3},
+  {id:"abigail",  name:"아비가일", fam:3},
+  {id:"paul",     name:"최바울",   fam:4},
+  {id:"maria",    name:"마리아",   fam:4},
+  {id:"josephine",name:"조세핀",   fam:4}
+];
+var FAMILIES = [
+  {id:1, name:"1가정"}, {id:2, name:"2가정"}, {id:3, name:"3가정"}, {id:4, name:"4가정"}
+];
+
+/* ---------- 매일 일정 ---------- */
+var SCHEDULE = [
+  { id:"dawn",  ico:"🌅", title:"가정별 합심기도", time:"06:30", kind:"family",
+    desc:"가정별로 모여 합심으로" },
+  { id:"call",  ico:"📞", title:"둘씩 전화 합심기도", time:"12:00", kind:"pairs",
+    desc:"팀별로 시간을 정해 통화로" },
+  { id:"c16",   ico:"🕯️", title:"센터 합심기도", time:"16:00", kind:"fixed",
+    members:["israel","paul"], alt:["16:00","16:30"], place:"센터" },
+  { id:"watch", ico:"🛡️", title:"성전지기", time:"19:00", kind:"fixed",
+    members:["paul","maria","josephine"], span:"19:00 ~ 22:00", place:"센터",
+    warn:"운동 갈 때 핸드폰 틀어놓기!" },
+  { id:"c20",   ico:"🔥", title:"센터 기도모임", time:"20:00", kind:"fixed",
+    members:["abraham","israel","paul"], alt:["20:00","20:30"], place:"센터" },
+  { id:"all",   ico:"⛪", title:"전체 합심기도", time:"20:30", kind:"all",
+    days:[3,6], leader:"인도: 담임목사님 / 하은", rsvp:true, desc:"수요일·토요일" },
+  { id:"share", ico:"🏠", title:"가정별 정보 공유 및 합심기도", time:"21:30", kind:"family" }
+];
+
+/* ---------- 주말 병원 심방 담당 ---------- */
+var VISIT_DUTY = [
+  {lb:"정", cls:"", who:"담임목사님"},
+  {lb:"부", cls:"sub", who:"하은"},
+  {lb:"비상", cls:"emg", who:"아브라함 · 이스라엘"}
+];
+
+var STATES = [
+  {k:"before", t:"출근 전", c:"#8a8078", bg:"#efeae7"},
+  {k:"work",   t:"근무 중", c:"#1c5b96", bg:"#e5eef7"},
+  {k:"off",    t:"퇴근",    c:"#1f7a4d", bg:"#e4f2ea"},
+  {k:"gym",    t:"운동 중", c:"#b26a00", bg:"#fdf0dc"},
+  {k:"move",   t:"이동 중", c:"#7a1220", bg:"#f6e6e6"},
+  {k:"rest",   t:"휴식/기도",c:"#5b3fa0", bg:"#ece7f8"}
+];
+
+/* ====================== 작은 유틸 ====================== */
+function $(s){return document.querySelector(s)}
+function el(t,c,h){var e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(m){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];})}
+function mem(id){for(var i=0;i<MEMBERS.length;i++) if(MEMBERS[i].id===id) return MEMBERS[i];
+  return {id:id,name:id,fam:0}}
+function famMembers(f){return MEMBERS.filter(function(m){return m.fam===f})}
+function pad(n){return n<10?"0"+n:""+n}
+function ymd(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function parseYmd(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2])}
+var DOW=["일","월","화","수","목","금","토"];
+function labelDate(s){
+  var d=parseYmd(s), t=ymd(new Date());
+  var rel = s===t ? "오늘" : (s===ymd(new Date(Date.now()-864e5)) ? "어제" :
+            (s===ymd(new Date(Date.now()+864e5)) ? "내일" : ""));
+  return (d.getMonth()+1)+"월 "+d.getDate()+"일 ("+DOW[d.getDay()]+")"+(rel?' <span>· '+rel+'</span>':"");
+}
+function ampm(t){
+  if(!t) return "";
+  var p=t.split(":"), h=+p[0];
+  var s = h<12?"오전":"오후"; var hh = h%12; if(hh===0) hh=12;
+  return s+" "+hh+":"+p[1];
+}
+function ago(ts){
+  if(!ts) return "";
+  var s=Math.floor((Date.now()-ts)/1000);
+  if(s<60) return "방금";
+  if(s<3600) return Math.floor(s/60)+"분 전";
+  if(s<86400) return Math.floor(s/3600)+"시간 전";
+  return Math.floor(s/86400)+"일 전";
+}
+function uid(){return Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4)}
+function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("on");
+  clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove("on")},1700)}
+
+/* 안전 저장소 (사용 불가 환경에서도 앱이 죽지 않게) */
+var mem_store={};
+var LS={
+  get:function(k){try{return localStorage.getItem(k)}catch(e){return mem_store[k]||null}},
+  set:function(k,v){try{localStorage.setItem(k,v)}catch(e){mem_store[k]=v}}
+};
+
+/* ====================== 데이터 저장소 ====================== */
+/* 경로:
+   status/{memberId}        = {s, n, ts, by}
+   days/{YMD}/entries/{eid} = {t, n, a:{memberId:1}, by, ts}
+   days/{YMD}/rsvp/{slot}/{memberId} = "yes"|"no"|"maybe"
+   visits/{YMD}/{vid}       = {t, n, a:{}, by, ts}
+*/
+var SHARED_ID = "hana@war-prayer.app";   // 공동 계정 (암호만 알면 됩니다)
+var DB = (function(){
+  var mode="local", data={}, subs=[], ref=null, ready=false, auth=null;
+
+  function getIn(o,path){
+    var p=path.split("/"), c=o;
+    for(var i=0;i<p.length;i++){ if(c==null) return null; c=c[p[i]]; }
+    return c==null?null:c;
+  }
+  function setIn(o,path,v){
+    var p=path.split("/"), c=o;
+    for(var i=0;i<p.length-1;i++){ if(typeof c[p[i]]!=="object"||c[p[i]]===null) c[p[i]]={}; c=c[p[i]]; }
+    if(v===null) delete c[p[p.length-1]]; else c[p[p.length-1]]=v;
+  }
+  function fire(){ for(var i=0;i<subs.length;i++) subs[i](); }
+  function saveLocal(){ LS.set("war_local_db", JSON.stringify(data)); }
+
+  return {
+    init:function(cfg,onState){
+      var raw=LS.get("war_local_db");
+      if(raw){ try{ data=JSON.parse(raw)||{} }catch(e){ data={} } }
+      if(!cfg){ mode="local"; ready=true; onState("local"); fire(); return; }
+      mode="fb"; onState("connecting");
+      var base="https://www.gstatic.com/firebasejs/10.12.5/";
+      loadScript(base+"firebase-app-compat.js",function(ok){
+        if(!ok) return fail();
+        loadScript(base+"firebase-database-compat.js",function(ok2){
+          if(!ok2) return fail();
+          loadScript(base+"firebase-auth-compat.js",function(hasAuth){
+            if(!hasAuth) return fail();
+            try{
+              firebase.initializeApp(cfg);
+              var attached=false;
+              function attach(){
+                if(attached) return; attached=true;
+                ref=firebase.database().ref("rooms/"+ROOM);
+                ref.on("value",function(snap){ data=snap.val()||{}; ready=true; onState("online"); fire(); },
+                  function(){ onState("denied") });
+              }
+              auth=firebase.auth();
+              auth.onAuthStateChanged(function(u){
+                if(u){ onState("auth"); attach(); }
+                else onState("login");
+              });
+            }catch(e){ fail() }
+          });
+        });
+      });
+      function fail(){ mode="local"; ready=true; onState("failed"); fire(); }
+      function loadScript(src,cb){
+        var s=document.createElement("script"); s.src=src;
+        s.onload=function(){cb(true)}; s.onerror=function(){cb(false)};
+        document.head.appendChild(s);
+      }
+    },
+    mode:function(){return mode},
+    login:function(pw,cb){
+      if(!auth) return cb("연결이 아직 준비되지 않았습니다. 잠시 후 다시 시도해 주세요.");
+      auth.signInWithEmailAndPassword(SHARED_ID,pw)
+        .then(function(){ cb(null) })
+        .catch(function(e){
+          var c=e&&e.code||"";
+          if(c.indexOf("wrong-password")>=0||c.indexOf("invalid-credential")>=0) cb("암호가 맞지 않습니다.");
+          else if(c.indexOf("too-many-requests")>=0) cb("시도가 너무 많습니다. 잠시 후 다시 해주세요.");
+          else if(c.indexOf("network")>=0) cb("인터넷 연결을 확인해 주세요.");
+          else cb("들어갈 수 없습니다. ("+c+")");
+        });
+    },
+    logout:function(){ if(auth) auth.signOut() },
+    get:function(path){ return getIn(data,path) },
+    all:function(){ return data },
+    set:function(path,v){
+      setIn(data,path,v);
+      if(mode==="fb"&&ref){ try{ ref.child(path).set(v) }catch(e){} } else saveLocal();
+      fire();
+    },
+    onChange:function(fn){ subs.push(fn) }
+  };
+})();
+
+/* ====================== 상태 ====================== */
+var S={ tab:"today", date:ymd(new Date()), me:LS.get("war_me")||null, mday:null, vday:null, logday:null };
+var pendingRender=false;
+
+function myName(){ return S.me? mem(S.me).name : "익명" }
+
+function saveEntry(date,eid,patch){
+  var cur=DB.get("days/"+date+"/entries/"+eid)||{};
+  for(var k in patch) cur[k]=patch[k];
+  cur.by=myName(); cur.ts=Date.now();
+  DB.set("days/"+date+"/entries/"+eid,cur);
+}
+function entry(date,eid){ return DB.get("days/"+date+"/entries/"+eid)||{} }
+function attCount(e){ var n=0,a=e.a||{}; for(var k in a) if(a[k]) n++; return n }
+function attNames(e){ var a=e.a||{},o=[]; for(var k in a) if(a[k]) o.push(mem(k).name); return o }
+
+/* ====================== 공통 렌더 조각 ====================== */
+/* 하나의 기도 블록: 시간 / 참석자 / 내용 */
+function blockEl(opts){
+  // opts: date, eid, label, members[], defTime, alt[], onDelete
+  var e=entry(opts.date,opts.eid);
+  var t=e.t||opts.defTime;
+  var wrap=el("div","blk");
+
+  var h=el("div","blk-h");
+  h.appendChild(el("b",null,esc(opts.label)));
+  var ti=el("input","tinput"); ti.type="time"; ti.value=t; ti.step=300;
+  ti.addEventListener("change",function(){
+    saveEntry(opts.date,opts.eid,{t:ti.value});
+    toast("시간 저장됨 · "+ampm(ti.value));
+  });
+  h.appendChild(ti);
+  if(opts.defTime && t!==opts.defTime) h.appendChild(el("span","pill chg","시간 변경"));
+  if(opts.onDelete){
+    var dx=el("button","del-x","✕");
+    dx.addEventListener("click",function(){ if(confirm("이 기록을 삭제할까요?")) opts.onDelete(); });
+    h.appendChild(dx);
+  }
+  wrap.appendChild(h);
+
+  var cw=el("div","chips");
+  (opts.members||[]).forEach(function(mid){
+    var m=mem(mid), on=!!(e.a&&e.a[mid]);
+    var b=el("button","chip"+(on?" on":""),esc(m.name));
+    b.addEventListener("click",function(){
+      var cur=entry(opts.date,opts.eid), a=cur.a||{};
+      if(a[mid]) delete a[mid]; else a[mid]=1;
+      saveEntry(opts.date,opts.eid,{a:a, t:(cur.t||opts.defTime)});
+      render();
+    });
+    cw.appendChild(b);
+  });
+  wrap.appendChild(cw);
+
+  var ta=el("textarea","note");
+  ta.placeholder=opts.ph||"기도 내용 · 나눔 · 응답을 기록하세요";
+  ta.value=e.n||"";
+  var tm;
+  ta.addEventListener("input",function(){
+    clearTimeout(tm);
+    tm=setTimeout(function(){ saveEntry(opts.date,opts.eid,{n:ta.value, t:(entry(opts.date,opts.eid).t||opts.defTime)}); },900);
+  });
+  ta.addEventListener("blur",function(){
+    clearTimeout(tm);
+    saveEntry(opts.date,opts.eid,{n:ta.value, t:(entry(opts.date,opts.eid).t||opts.defTime)});
+  });
+  wrap.appendChild(ta);
+
+  var cnt=attCount(e);
+  var info = cnt? (cnt+"명 참석 · "+attNames(e).join(", ")) : "아직 참석 기록이 없습니다";
+  wrap.appendChild(el("div","meta",esc(info)+(e.by?" · 최종 기록 "+esc(e.by)+" "+ago(e.ts):"")));
+  return wrap;
+}
+
+/* ====================== 탭 1 : 오늘 일정 ====================== */
+function renderToday(){
+  var p=$("#p-today"); p.innerHTML="";
+  var date=S.date, dow=parseYmd(date).getDay();
+
+  var totalDone=0,totalBlk=0;
+  var items=SCHEDULE.filter(function(s){ return !s.days || s.days.indexOf(dow)>=0 });
+  items.sort(function(a,b){ return a.time<b.time?-1:1 });
+
+  var head=el("div","verse",
+    "<b>지금은 전쟁중</b>깨어 있어 기도하라 · 오늘 하루도 온 가족이 한 마음으로 무릎 꿇습니다.");
+  p.appendChild(head);
+
+  items.forEach(function(s){
+    var card=el("div","card");
+    var ch=el("div","card-h");
+    ch.appendChild(el("div","ico",s.ico));
+    var tt=el("div","tt");
+    tt.appendChild(el("b",null,esc(s.title)));
+    var sub=(s.span?s.span:ampm(s.time))+(s.place?" · "+s.place:"")+(s.desc?" · "+s.desc:"")+(s.leader?" · "+s.leader:"");
+    tt.appendChild(el("span",null,esc(sub)));
+    ch.appendChild(tt);
+
+    // 완료 상태 뱃지
+    var doneN=0,blkN=0;
+    if(s.kind==="family"){ blkN=FAMILIES.length;
+      FAMILIES.forEach(function(f){ if(attCount(entry(date,s.id+"__f"+f.id))>0) doneN++ }); }
+    else if(s.kind==="pairs"){ var ps=pairList(date); blkN=Math.max(1,ps.length);
+      ps.forEach(function(k){ if(attCount(entry(date,k))>0) doneN++ }); }
+    else { blkN=1; if(attCount(entry(date,s.id))>0) doneN=1 }
+    totalDone+=doneN; totalBlk+=blkN;
+    ch.appendChild(el("span","pill"+(doneN>=blkN&&blkN>0?" done":""),doneN+"/"+blkN));
+    card.appendChild(ch);
+
+    if(s.kind==="family"){
+      FAMILIES.forEach(function(f){
+        card.appendChild(blockEl({date:date,eid:s.id+"__f"+f.id,label:f.name,
+          members:famMembers(f.id).map(function(m){return m.id}),defTime:s.time}));
+      });
+    } else if(s.kind==="pairs"){
+      var list=pairList(date);
+      if(!list.length) card.appendChild(el("div","empty","오늘의 전화 합심기도 기록이 아직 없습니다.<br>아래 버튼으로 추가하세요."));
+      list.forEach(function(eid,i){
+        card.appendChild(blockEl({date:date,eid:eid,label:(i+1)+"팀",
+          members:MEMBERS.map(function(m){return m.id}),defTime:s.time,
+          ph:"통화 기도 제목 · 나눈 내용",
+          onDelete:function(){ DB.set("days/"+date+"/entries/"+eid,null); render(); }}));
+      });
+      var addWrap=el("div","blk");
+      var add=el("button","btn soft small","＋ 전화 합심기도 팀 추가");
+      add.addEventListener("click",function(){
+        saveEntry(date,"call__"+uid(),{t:s.time,a:{},n:""}); render();
+      });
+      addWrap.appendChild(add); card.appendChild(addWrap);
+    } else {
+      var b=blockEl({date:date,eid:s.id,label:s.title,
+        members:(s.kind==="all")?MEMBERS.map(function(m){return m.id}):s.members,
+        defTime:s.time});
+      if(s.alt) b.appendChild(el("div","meta","기본 "+s.alt.map(ampm).join(" 또는 ")+" · 사정에 따라 시간을 바꾸면 자동으로 모두에게 표시됩니다"));
+      if(s.warn) b.appendChild(el("div","hint","⚠ "+esc(s.warn)));
+      card.appendChild(b);
+      if(s.rsvp){
+        var rz=el("div","blk");
+        rz.appendChild(el("b",null,"참석 여부"));
+        rz.appendChild(rsvpEl(date,s.id));
+        card.appendChild(rz);
+      }
+    }
+    p.appendChild(card);
+  });
+
+  var prog=el("div","card");
+  prog.appendChild(el("div","card-h",
+    '<div class="ico">📊</div><div class="tt"><b>오늘 기도 진행</b><span>'+totalDone+" / "+totalBlk+" 모임 기록 완료</span></div>"));
+  p.appendChild(prog);
+}
+function pairList(date){
+  var es=DB.get("days/"+date+"/entries")||{}, out=[];
+  for(var k in es) if(k.indexOf("call__")===0) out.push(k);
+  out.sort(); return out;
+}
+
+/* ====================== 참석여부(RSVP) ====================== */
+function rsvpEl(date,slot){
+  var wrap=el("div");
+  var mine=S.me? DB.get("days/"+date+"/rsvp/"+slot+"/"+S.me) : null;
+  var r=el("div","rsvp");
+  [["yes","참석"],["maybe","미정"],["no","불참"]].forEach(function(o){
+    var b=el("button",o[0]+(mine===o[0]?" on":""),o[1]);
+    b.classList.add(o[0]);
+    if(mine===o[0]) b.classList.add("on");
+    b.addEventListener("click",function(){
+      if(!S.me){ openMe(); return }
+      DB.set("days/"+date+"/rsvp/"+slot+"/"+S.me, mine===o[0]?null:o[0]);
+      toast(o[1]+"(으)로 표시했습니다"); render();
+    });
+    r.appendChild(b);
+  });
+  wrap.appendChild(r);
+  var all=DB.get("days/"+date+"/rsvp/"+slot)||{};
+  var list=el("div","rs-list");
+  MEMBERS.forEach(function(m){
+    var v=all[m.id];
+    var label=m.name+(v==="yes"?" 참석":v==="no"?" 불참":v==="maybe"?" 미정":" ―");
+    list.appendChild(el("span","rs-t "+(v||""),esc(label)));
+  });
+  wrap.appendChild(list);
+  return wrap;
+}
+
+/* ====================== 탭 2 : 실시간 현황 ====================== */
+function renderStatus(){
+  var p=$("#p-status"); p.innerHTML="";
+
+  var my=el("div","card my");
+  my.appendChild(el("div","card-h",
+    '<div class="ico">🙋</div><div class="tt"><b>내 상황 알리기</b><span>'+esc(myName())+" · 누르면 바로 모두에게 공유됩니다</span></div>"));
+  var body=el("div","blk");
+  var g=el("div","st-grid");
+  var cur=S.me? (DB.get("status/"+S.me)||{}) : {};
+  STATES.forEach(function(st){
+    var on=cur.s===st.k;
+    var b=el("button","st-btn"+(on?" on":""),st.t);
+    b.style.background=on?st.c:"#fff";
+    b.style.borderColor=on?st.c:"";
+    b.addEventListener("click",function(){
+      if(!S.me){ openMe(); return }
+      DB.set("status/"+S.me,{s:st.k,n:(cur.n||""),ts:Date.now()});
+      toast(st.t+"(으)로 알렸습니다"); render();
+    });
+    g.appendChild(b);
+  });
+  body.appendChild(g);
+
+  var ni=el("textarea","note");
+  ni.placeholder="지금 상황을 자유롭게 적어주세요 (예: 병원 도착, 3시까지 회의, 기도 부탁드립니다)";
+  ni.style.marginTop="11px"; ni.value=cur.n||"";
+  var tm;
+  function saveNote(){
+    if(!S.me) return;
+    var c=DB.get("status/"+S.me)||{};
+    DB.set("status/"+S.me,{s:c.s||"",n:ni.value,ts:Date.now()});
+  }
+  ni.addEventListener("input",function(){clearTimeout(tm);tm=setTimeout(saveNote,900)});
+  ni.addEventListener("blur",function(){clearTimeout(tm);saveNote()});
+  body.appendChild(ni);
+  my.appendChild(body);
+  p.appendChild(my);
+
+  p.appendChild(el("div","sect-h","구성원 실시간 현황"));
+  FAMILIES.forEach(function(f){
+    var card=el("div","card");
+    card.appendChild(el("div","card-h",
+      '<div class="ico">👨‍👩‍👧</div><div class="tt"><b>'+f.name+"</b><span>"+
+      famMembers(f.id).map(function(m){return m.name}).join(" · ")+"</span></div>"));
+    famMembers(f.id).forEach(function(m){
+      var st=DB.get("status/"+m.id)||{};
+      var def=null; STATES.forEach(function(x){if(x.k===st.s)def=x});
+      var row=el("div","mem-row");
+      row.appendChild(el("div","av",esc(m.name.slice(0,1))));
+      var nm=el("div","nm");
+      nm.appendChild(el("b",null,esc(m.name)));
+      nm.appendChild(el("span",null,esc(st.n||"")+(st.ts?(st.n?" · ":"")+ago(st.ts):"")));
+      row.appendChild(nm);
+      var tag=el("span","stag",def?def.t:"미표시");
+      tag.style.background=def?def.bg:"#efeae3";
+      tag.style.color=def?def.c:"#9a9086";
+      row.appendChild(tag);
+      card.appendChild(row);
+    });
+    p.appendChild(card);
+  });
+}
+
+/* ====================== 탭 3 : 기도모임(수·토) ====================== */
+function upcomingMeetings(n){
+  var out=[], d=new Date(); d.setDate(d.getDate()-14);
+  for(var i=0;i<40 && out.length<n;i++){
+    var dow=d.getDay();
+    if(dow===3||dow===6) out.push(ymd(d));
+    d.setDate(d.getDate()+1);
+  }
+  return out;
+}
+function renderMeeting(){
+  var p=$("#p-meeting"); p.innerHTML="";
+  var list=upcomingMeetings(8);
+  var today=ymd(new Date());
+  if(!S.mday){
+    S.mday=list.filter(function(x){return x>=today})[0]||list[list.length-1];
+  }
+
+  p.appendChild(el("div","verse",
+    "<b>수요일 · 토요일 저녁 8:30</b>전체 합심기도 — 전 구성원 + 목사님/드보라<br>인도: 담임목사님 / 하은"));
+
+  var pick=el("div","card");
+  pick.appendChild(el("div","card-h",'<div class="ico">📅</div><div class="tt"><b>기도모임 날짜</b><span>수요일·토요일</span></div>'));
+  var pw=el("div","blk"); var grid=el("div","chips");
+  list.forEach(function(d){
+    var dd=parseYmd(d);
+    var b=el("button","chip"+(d===S.mday?" on":""),(dd.getMonth()+1)+"/"+dd.getDate()+"("+DOW[dd.getDay()]+")");
+    b.addEventListener("click",function(){S.mday=d;render()});
+    grid.appendChild(b);
+  });
+  pw.appendChild(grid); pick.appendChild(pw); p.appendChild(pick);
+
+  var d=S.mday;
+  var card=el("div","card");
+  card.appendChild(el("div","card-h",
+    '<div class="ico">⛪</div><div class="tt"><b>'+labelDate(d).replace(/<[^>]+>/g,"")+" 전체 합심기도</b><span>인도: 담임목사님 / 하은</span></div>"));
+  var rz=el("div","blk");
+  rz.appendChild(el("b",null,"내 참석 여부"));
+  rz.appendChild(rsvpEl(d,"all"));
+  card.appendChild(rz);
+  card.appendChild(blockEl({date:d,eid:"all",label:"모임 기록",
+    members:MEMBERS.map(function(m){return m.id}),defTime:"20:30",
+    ph:"말씀 · 기도 제목 · 나눈 내용 · 응답을 기록하세요"}));
+  card.appendChild(el("div","blk",'<div class="meta">시간이 변경되면 위 시간을 바꿔주세요. 모든 구성원 화면에 "시간 변경"으로 표시됩니다.</div>'));
+  p.appendChild(card);
+}
+
+/* ====================== 탭 4 : 주말 병원 심방 ====================== */
+function weekendDates(n){
+  var out=[], d=new Date(); d.setDate(d.getDate()-7);
+  for(var i=0;i<50 && out.length<n;i++){
+    var w=d.getDay(); if(w===6||w===0) out.push(ymd(d));
+    d.setDate(d.getDate()+1);
+  }
+  return out;
+}
+function renderVisit(){
+  var p=$("#p-visit"); p.innerHTML="";
+  var duty=el("div","card");
+  duty.appendChild(el("div","card-h",'<div class="ico">🏥</div><div class="tt"><b>주말 병원 심방 담당</b><span>스케줄은 담당자가 기록합니다</span></div>'));
+  VISIT_DUTY.forEach(function(d){
+    var r=el("div","duty");
+    r.appendChild(el("span","lb "+d.cls,d.lb));
+    r.appendChild(el("span","vv",esc(d.who)));
+    duty.appendChild(r);
+  });
+  p.appendChild(duty);
+
+  var days=weekendDates(6), today=ymd(new Date());
+  if(!S.vday) S.vday=days.filter(function(x){return x>=today})[0]||days[0];
+
+  var pick=el("div","card");
+  pick.appendChild(el("div","card-h",'<div class="ico">📅</div><div class="tt"><b>심방 날짜</b><span>토요일 · 주일</span></div>'));
+  var pw=el("div","blk"); var grid=el("div","chips");
+  days.forEach(function(d){
+    var dd=parseYmd(d);
+    var b=el("button","chip"+(d===S.vday?" on":""),(dd.getMonth()+1)+"/"+dd.getDate()+"("+DOW[dd.getDay()]+")");
+    b.addEventListener("click",function(){S.vday=d;render()});
+    grid.appendChild(b);
+  });
+  pw.appendChild(grid); pick.appendChild(pw); p.appendChild(pick);
+
+  var d=S.vday;
+  var vs=DB.get("visits/"+d)||{};
+  var keys=Object.keys(vs).sort(function(a,b){return (vs[a].t||"")<(vs[b].t||"")?-1:1});
+  var card=el("div","card");
+  card.appendChild(el("div","card-h",
+    '<div class="ico">🚑</div><div class="tt"><b>'+labelDate(d).replace(/<[^>]+>/g,"")+" 심방 스케줄</b><span>"+keys.length+"건</span></div>"));
+  if(!keys.length) card.appendChild(el("div","empty","등록된 심방 일정이 없습니다."));
+  keys.forEach(function(k){
+    card.appendChild(visitBlock(d,k,vs[k]));
+  });
+  var aw=el("div","blk");
+  var add=el("button","btn soft small","＋ 심방 일정 추가");
+  add.addEventListener("click",function(){
+    DB.set("visits/"+d+"/"+uid(),{t:"14:00",n:"",a:{},by:myName(),ts:Date.now()}); render();
+  });
+  aw.appendChild(add); card.appendChild(aw);
+  p.appendChild(card);
+}
+function visitBlock(date,vid,v){
+  var wrap=el("div","blk");
+  var h=el("div","blk-h");
+  h.appendChild(el("b",null,"심방"));
+  var ti=el("input","tinput"); ti.type="time"; ti.value=v.t||"14:00"; ti.step=300;
+  ti.addEventListener("change",function(){
+    var c=DB.get("visits/"+date+"/"+vid)||{}; c.t=ti.value; c.by=myName(); c.ts=Date.now();
+    DB.set("visits/"+date+"/"+vid,c); toast("심방 시간 저장됨");
+  });
+  h.appendChild(ti);
+  var dx=el("button","del-x","✕");
+  dx.addEventListener("click",function(){ if(confirm("이 심방 일정을 삭제할까요?")){DB.set("visits/"+date+"/"+vid,null);render()} });
+  h.appendChild(dx);
+  wrap.appendChild(h);
+
+  var cw=el("div","chips");
+  MEMBERS.forEach(function(m){
+    var on=!!(v.a&&v.a[m.id]);
+    var b=el("button","chip"+(on?" on":""),esc(m.name));
+    b.addEventListener("click",function(){
+      var c=DB.get("visits/"+date+"/"+vid)||{}; var a=c.a||{};
+      if(a[m.id]) delete a[m.id]; else a[m.id]=1;
+      c.a=a; c.by=myName(); c.ts=Date.now();
+      DB.set("visits/"+date+"/"+vid,c); render();
+    });
+    cw.appendChild(b);
+  });
+  wrap.appendChild(cw);
+
+  var ta=el("textarea","note");
+  ta.placeholder="심방 장소 · 대상 · 기도 제목 · 상황 기록";
+  ta.value=v.n||"";
+  var tm;
+  function sv(){ var c=DB.get("visits/"+date+"/"+vid)||{}; c.n=ta.value; c.by=myName(); c.ts=Date.now(); DB.set("visits/"+date+"/"+vid,c) }
+  ta.addEventListener("input",function(){clearTimeout(tm);tm=setTimeout(sv,900)});
+  ta.addEventListener("blur",function(){clearTimeout(tm);sv()});
+  wrap.appendChild(ta);
+
+  var names=[]; for(var k in (v.a||{})) if(v.a[k]) names.push(mem(k).name);
+  wrap.appendChild(el("div","meta",(names.length?names.length+"명 · "+names.join(", "):"참석자 미기록")+(v.by?" · 기록 "+esc(v.by)+" "+ago(v.ts):"")));
+  return wrap;
+}
+
+/* ====================== 탭 5 : 기록 · 설정 ====================== */
+function dayReport(date){
+  var dow=parseYmd(date).getDay();
+  var L=[], d=parseYmd(date);
+  L.push("【지금은 전쟁중 — 깨어 하나되자!】");
+  L.push((d.getMonth()+1)+"월 "+d.getDate()+"일 ("+DOW[dow]+") 기도 기록");
+  L.push("");
+  SCHEDULE.filter(function(s){return !s.days||s.days.indexOf(dow)>=0})
+    .sort(function(a,b){return a.time<b.time?-1:1}).forEach(function(s){
+    var lines=[];
+    function push(label,eid,defT){
+      var e=entry(date,eid); var n=attCount(e);
+      if(!n && !(e.n||"").trim()) return;
+      lines.push("  · "+label+" "+ampm(e.t||defT)+" | "+(n?attNames(e).join(", "):"참석 미기록")+
+        ((e.n||"").trim()?"\n    ↳ "+e.n.trim().replace(/\n/g,"\n      "):""));
+    }
+    if(s.kind==="family") FAMILIES.forEach(function(f){ push(f.name,s.id+"__f"+f.id,s.time) });
+    else if(s.kind==="pairs") pairList(date).forEach(function(k,i){ push((i+1)+"팀",k,s.time) });
+    else push("모임",s.id,s.time);
+    if(lines.length){ L.push("▶ "+s.title+" ("+ampm(s.time)+")"); L.push(lines.join("\n")); L.push(""); }
+  });
+  var vs=DB.get("visits/"+date)||{};
+  var vk=Object.keys(vs);
+  if(vk.length){
+    L.push("▶ 병원 심방");
+    vk.forEach(function(k){
+      var v=vs[k], nm=[]; for(var i in (v.a||{})) if(v.a[i]) nm.push(mem(i).name);
+      L.push("  · "+ampm(v.t)+" | "+(nm.join(", ")||"참석 미기록")+((v.n||"").trim()?"\n    ↳ "+v.n.trim():""));
+    });
+    L.push("");
+  }
+  L.push("― 깨어 기도하는 하나된 공동체 ―");
+  return L.join("\n");
+}
+function renderLog(){
+  var p=$("#p-log"); p.innerHTML="";
+  if(!S.logday) S.logday=S.date;
+
+  var card=el("div","card");
+  card.appendChild(el("div","card-h",'<div class="ico">📖</div><div class="tt"><b>하루 기록 모아보기</b><span>카카오톡 등으로 공유할 수 있습니다</span></div>'));
+  var w=el("div","blk");
+  var di=el("input","tinput"); di.type="date"; di.value=S.logday; di.style.width="100%";
+  di.addEventListener("change",function(){S.logday=di.value;render()});
+  w.appendChild(di);
+  var pre=el("textarea","note");
+  pre.style.minHeight="260px"; pre.style.fontSize="15px"; pre.readOnly=true;
+  pre.value=dayReport(S.logday);
+  w.appendChild(el("div",null,"<div style='height:11px'></div>"));
+  w.appendChild(pre);
+  var cp=el("button","btn small","📋 기록 복사하기");
+  cp.style.marginTop="11px";
+  cp.addEventListener("click",function(){
+    pre.readOnly=false; pre.select(); pre.setSelectionRange(0,99999);
+    try{ document.execCommand("copy"); toast("복사되었습니다") }catch(e){ toast("길게 눌러 복사해 주세요") }
+    pre.readOnly=true;
+  });
+  w.appendChild(cp);
+  card.appendChild(w); p.appendChild(card);
+
+  p.appendChild(el("div","sect-h","설정"));
+  var st=el("div","card");
+  st.appendChild(el("div","card-h",'<div class="ico">⚙️</div><div class="tt"><b>내 정보 · 연결</b><span>'+esc(myName())+"</span></div>"));
+  var sw=el("div","blk");
+  var b1=el("button","btn ghost small","이름 다시 선택하기");
+  b1.addEventListener("click",openMe);
+  sw.appendChild(b1);
+  sw.appendChild(el("div",null,"<div style='height:9px'></div>"));
+  var b2=el("button","btn ghost small","Firebase 실시간 공유 설정");
+  b2.addEventListener("click",function(){ $("#ovCfg").classList.add("on") });
+  sw.appendChild(b2);
+  sw.appendChild(el("div",null,"<div style='height:9px'></div>"));
+  var b3=el("button","btn ghost small","이 기기에서 로그아웃 (암호 다시 묻기)");
+  b3.addEventListener("click",function(){ if(confirm("이 기기에서 로그아웃할까요? 다음에 공동 암호를 다시 입력해야 합니다.")) DB.logout() });
+  sw.appendChild(b3);
+  var m=DB.mode();
+  sw.appendChild(el("div","meta", m==="fb"
+      ? "현재 상태: 실시간 공유 연결됨. 같은 설정을 쓰는 모든 구성원과 즉시 공유됩니다."
+      : "현재 상태: 체험 모드(이 기기에만 저장). 실시간 공유를 하려면 Firebase 설정을 입력하세요."));
+  st.appendChild(sw);
+  p.appendChild(st);
+
+  var help=el("div","card");
+  help.appendChild(el("div","card-h",'<div class="ico">💡</div><div class="tt"><b>사용 안내</b></div>'));
+  help.appendChild(el("div","blk",
+    "<div style='font-size:16px;line-height:1.75'>"+
+    "① <b>오늘 일정</b> — 기도가 끝나면 참석자 이름을 눌러 체크하고 내용을 적습니다.<br>"+
+    "② 사정상 시간이 바뀌면 <b>시간칸을 직접 수정</b>하세요. 모두에게 '시간 변경'으로 보입니다.<br>"+
+    "③ <b>실시간 현황</b> — 출근 전/근무 중/퇴근/운동 중/이동 중을 누르고, 필요하면 자유롭게 상황을 적습니다.<br>"+
+    "④ <b>기도모임</b> — 수·토 전체 합심기도의 참석 여부를 미리 표시합니다.<br>"+
+    "⑤ <b>병원 심방</b> — 담당자가 주말 심방 시간과 참석자를 기록합니다.<br>"+
+    "⑥ <b>기록</b> — 하루 기록을 한 번에 복사해 단톡방에 올릴 수 있습니다."+
+    "</div>"));
+  p.appendChild(help);
+}
+
+/* ====================== 렌더 ====================== */
+function render(){
+  var a=document.activeElement;
+  if(a && (a.tagName==="TEXTAREA" || (a.tagName==="INPUT" && a.type!=="date"))){ pendingRender=true; return }
+  pendingRender=false;
+  $("#dLabel").innerHTML=labelDate(S.date);
+  $("#meBtn").textContent=S.me?mem(S.me).name:"나 선택";
+  document.querySelectorAll("nav button").forEach(function(b){
+    b.classList.toggle("on",b.dataset.tab===S.tab)});
+  document.querySelectorAll(".panel").forEach(function(x){x.classList.remove("on")});
+  $("#p-"+S.tab).classList.add("on");
+  if(S.tab==="today") renderToday();
+  else if(S.tab==="status") renderStatus();
+  else if(S.tab==="meeting") renderMeeting();
+  else if(S.tab==="visit") renderVisit();
+  else renderLog();
+}
+document.addEventListener("focusout",function(){
+  setTimeout(function(){ if(pendingRender) render() },250);
+});
+
+/* ====================== 이벤트 ====================== */
+document.querySelectorAll("nav button").forEach(function(b){
+  b.addEventListener("click",function(){ S.tab=b.dataset.tab; window.scrollTo(0,0); render() });
+});
+$("#dPrev").addEventListener("click",function(){
+  var d=parseYmd(S.date); d.setDate(d.getDate()-1); S.date=ymd(d); render();
+});
+$("#dNext").addEventListener("click",function(){
+  var d=parseYmd(S.date); d.setDate(d.getDate()+1); S.date=ymd(d); render();
+});
+function openMe(){
+  var w=$("#pickList"); w.innerHTML="";
+  FAMILIES.forEach(function(f){
+    w.appendChild(el("div","fam-tag",f.name));
+    famMembers(f.id).forEach(function(m){
+      var b=el("button",S.me===m.id?"on":"",esc(m.name));
+      b.addEventListener("click",function(){
+        S.me=m.id; LS.set("war_me",m.id); $("#ovMe").classList.remove("on");
+        toast(m.name+"님, 함께 기도합니다"); render();
+      });
+      w.appendChild(b);
+    });
+  });
+  $("#ovMe").classList.add("on");
+}
+$("#meBtn").addEventListener("click",openMe);
+$("#meClose").addEventListener("click",function(){$("#ovMe").classList.remove("on")});
+$("#cfgClose").addEventListener("click",function(){$("#ovCfg").classList.remove("on")});
+$("#cfgSave").addEventListener("click",function(){
+  var t=$("#cfgTa").value.trim();
+  if(!t){ toast("설정 내용을 붙여넣어 주세요"); return }
+  try{
+    var m=t.match(/\{[\s\S]*\}/); var obj=null;
+    try{ obj=JSON.parse(m?m[0]:t) }catch(e){ obj=(new Function("return ("+(m?m[0]:t)+")"))() }
+    if(!obj || !obj.apiKey){ toast("apiKey가 보이지 않습니다"); return }
+    LS.set("war_cfg",JSON.stringify(obj));
+    toast("저장했습니다. 다시 시작합니다…");
+    setTimeout(function(){ location.reload() },900);
+  }catch(e){ toast("형식을 확인해 주세요") }
+});
+$("#ovMe").addEventListener("click",function(e){ if(e.target.id==="ovMe") $("#ovMe").classList.remove("on") });
+$("#ovCfg").addEventListener("click",function(e){ if(e.target.id==="ovCfg") $("#ovCfg").classList.remove("on") });
+
+/* ====================== 시작 ====================== */
+(function start(){
+  var cfg=FIREBASE_CONFIG;
+  if(!cfg){ var raw=LS.get("war_cfg"); if(raw){ try{ cfg=JSON.parse(raw) }catch(e){} } }
+  if(cfg){ try{ $("#cfgTa").value=JSON.stringify(cfg,null,2) }catch(e){} }
+  var authed=false;
+  DB.onChange(function(){ render() });
+  DB.init(cfg,function(state){
+    var dot=$("#cDot"), txt=$("#cTxt");
+    if(state==="online"){
+      dot.classList.remove("off"); txt.textContent="실시간 공유 연결됨 · 모든 구성원과 함께 보고 있습니다";
+      $("#ovLogin").classList.remove("on");
+      if(!authed){ authed=true; if(!S.me) setTimeout(openMe,400) }
+    }
+    else if(state==="auth"){ dot.classList.add("off"); txt.textContent="기록을 불러오는 중…" }
+    else if(state==="login"){
+      dot.classList.add("off"); txt.textContent="공동 암호 입력이 필요합니다";
+      $("#ovLogin").classList.add("on"); setTimeout(function(){ try{$("#pwIn").focus()}catch(e){} },200);
+    }
+    else if(state==="denied"){ dot.classList.add("off"); txt.textContent="읽기 권한이 없습니다 — 담당자에게 문의하세요" }
+    else if(state==="connecting"){ dot.classList.add("off"); txt.textContent="연결하는 중…" }
+    else if(state==="failed"){ dot.classList.add("off"); txt.textContent="연결 실패 — 이 기기에만 저장됩니다" }
+    else { dot.classList.add("off"); txt.textContent="체험 모드 · 이 기기에만 저장 (설정에서 실시간 공유 켜기)" }
+  });
+  function doLogin(){
+    var pw=$("#pwIn").value.trim();
+    if(!pw){ $("#pwMsg").textContent="암호를 입력해 주세요."; return }
+    $("#pwMsg").style.color="#ffe9b0"; $("#pwMsg").textContent="확인 중…";
+    DB.login(pw,function(err){
+      if(err){ $("#pwMsg").style.color="#ffc9c9"; $("#pwMsg").textContent=err; }
+      else { $("#pwMsg").textContent=""; $("#pwIn").value=""; }
+    });
+  }
+  $("#pwGo").addEventListener("click",doLogin);
+  $("#pwIn").addEventListener("keydown",function(e){ if(e.key==="Enter") doLogin() });
+  render();
+  setInterval(function(){ if(S.tab==="status") render() },60000);
+  setInterval(function(){
+    var t=ymd(new Date());
+    if(S.date!==t && S.date===ymd(new Date(Date.now()-864e5))){ /* 자정 지나도 사용자 선택 유지 */ }
+  },60000);
+  if(!cfg && !S.me) setTimeout(openMe,500);
+})();
+</script>
+</body>
+</html>

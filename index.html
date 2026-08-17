@@ -221,16 +221,16 @@
 </header>
 
 <main>
-  <section class="panel on" id="p-today"></section>
-  <section class="panel" id="p-status"></section>
+  <section class="panel on" id="p-status"></section>
+  <section class="panel" id="p-today"></section>
   <section class="panel" id="p-meeting"></section>
   <section class="panel" id="p-visit"></section>
   <section class="panel" id="p-log"></section>
 </main>
 
 <nav>
-  <button class="on" data-tab="today"><b>🕯️</b>오늘 일정</button>
-  <button data-tab="status"><b>📍</b>실시간 현황</button>
+  <button class="on" data-tab="status"><b>📍</b>실시간 현황</button>
+  <button data-tab="today"><b>🕯️</b>오늘 일정</button>
   <button data-tab="meeting"><b>⛪</b>기도모임</button>
   <button data-tab="visit"><b>🏥</b>병원 심방</button>
   <button data-tab="log"><b>📖</b>기록·설정</button>
@@ -306,7 +306,10 @@ var MEMBERS = [
   {id:"josephine",name:"조세핀",   fam:4}
 ];
 var FAMILIES = [
-  {id:1, name:"1가정"}, {id:2, name:"2가정"}, {id:3, name:"3가정"}, {id:4, name:"4가정"}
+  {id:1, name:"예루살렘 가정"},
+  {id:2, name:"아브라함 가정"},
+  {id:3, name:"이스라엘 가정"},
+  {id:4, name:"바울 가정"}
 ];
 
 /* ---------- 매일 일정 ---------- */
@@ -474,7 +477,7 @@ var DB = (function(){
 })();
 
 /* ====================== 상태 ====================== */
-var S={ tab:"today", date:ymd(new Date()), me:LS.get("war_me")||null, mday:null, vday:null, logday:null };
+var S={ tab:"status", date:ymd(new Date()), me:LS.get("war_me")||null, mday:null, vday:null, logday:null };
 var pendingRender=false;
 
 function myName(){ return S.me? mem(S.me).name : "익명" }

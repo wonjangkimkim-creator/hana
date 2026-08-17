@@ -90,6 +90,23 @@
   .sum-chip.acc b{color:var(--accent)}
   .sum-chip.blue b{color:var(--blue)}
   .sum-note{font-size:13.5px;color:var(--ink-2);font-weight:700;margin-top:10px;line-height:1.5}
+  .glance{margin-top:12px;border-top:1px dashed #ddcfb8;padding-top:9px}
+  .g-row{display:flex;gap:7px;font-size:13.5px;line-height:1.5;padding:4px 0;align-items:baseline}
+  .g-row .gk{color:var(--ok);font-weight:900;flex-shrink:0;font-size:13px}
+  .g-row.off .gk{color:#c9bfb2}
+  .g-row .gt{font-weight:800;color:var(--ink);white-space:nowrap;flex-shrink:0}
+  .g-row.off .gt{color:#a89e92;font-weight:700}
+  .g-row .gn{color:var(--ink-2);font-weight:700;min-width:0}
+  .g-row.off .gn{color:#b3a99c;font-weight:600}
+  .g-row .gn b{color:var(--accent);font-weight:800}
+
+  /* ---------- 나만 보기 / 전체 보기 ---------- */
+  .seg{display:flex;gap:8px;margin-bottom:15px}
+  .seg button{
+    flex:1;min-height:48px;border-radius:13px;border:2px solid var(--line);background:#fff;
+    font-size:15.5px;font-weight:800;color:var(--ink-2);
+  }
+  .seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 
   /* ---------- exercise ---------- */
   .ex-row{display:flex;gap:9px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
@@ -357,20 +374,20 @@ var FAMILIES = [
 
 /* ---------- 매일 일정 ---------- */
 var SCHEDULE = [
-  { id:"dawn",  ico:"🌅", title:"가정별 합심기도", time:"06:30", kind:"family",
+  { id:"dawn",  ico:"🌅", title:"가정별 합심기도", short:"새벽 합심기도", time:"06:30", kind:"family",
     desc:"가정별로 모여 합심으로" },
-  { id:"call",  ico:"📞", title:"둘씩 전화 합심기도", time:"12:00", kind:"pairs",
+  { id:"call",  ico:"📞", title:"둘씩 전화 합심기도", short:"전화 합심기도", time:"12:00", kind:"pairs",
     desc:"팀별로 시간을 정해 통화로" },
-  { id:"c16",   ico:"🕯️", title:"센터 합심기도", time:"16:00", kind:"fixed",
+  { id:"c16",   ico:"🕯️", title:"센터 합심기도", short:"센터 합심기도", time:"16:00", kind:"fixed",
     members:["israel","paul"], alt:["16:00","16:30"], place:"센터" },
-  { id:"watch", ico:"🛡️", title:"성전지기", time:"19:00", kind:"fixed",
+  { id:"watch", ico:"🛡️", title:"성전지기", short:"성전지기", time:"19:00", kind:"fixed",
     members:["paul","maria","josephine"], span:"19:00 ~ 22:00", place:"센터",
     warn:"운동 갈 때 핸드폰 틀어놓기!" },
-  { id:"c20",   ico:"🔥", title:"센터 기도모임", time:"20:00", kind:"fixed",
+  { id:"c20",   ico:"🔥", title:"센터 기도모임", short:"센터 기도모임", time:"20:00", kind:"fixed",
     members:["abraham","israel","paul"], alt:["20:00","20:30"], place:"센터" },
-  { id:"all",   ico:"⛪", title:"전체 합심기도", time:"20:30", kind:"all",
+  { id:"all",   ico:"⛪", title:"전체 합심기도", short:"전체 합심기도", time:"20:30", kind:"all",
     days:[3,6], leader:"인도: 담임목사님 / 하은", rsvp:true, desc:"수요일·토요일" },
-  { id:"share", ico:"🏠", title:"가정별 정보 공유 및 합심기도", time:"21:30", kind:"family" }
+  { id:"share", ico:"🏠", title:"가정별 정보 공유 및 합심기도", short:"가정 나눔 기도", time:"21:30", kind:"family" }
 ];
 
 /* ---------- 주말 병원 심방 담당 ---------- */
@@ -520,7 +537,8 @@ var DB = (function(){
 })();
 
 /* ====================== 상태 ====================== */
-var S={ tab:"status", date:ymd(new Date()), me:LS.get("war_me")||null, mday:null, vday:null, logday:null };
+var S={ tab:"status", date:ymd(new Date()), me:LS.get("war_me")||null,
+        mine:(LS.get("war_mine")!=="0"), mday:null, vday:null, logday:null };
 var pendingRender=false;
 
 function myName(){ return S.me? mem(S.me).name : "익명" }
@@ -536,7 +554,7 @@ function attCount(e){ var n=0,a=e.a||{}; for(var k in a) if(a[k]) n++; return n 
 function attNames(e){ var a=e.a||{},o=[]; for(var k in a) if(a[k]) o.push(mem(k).name); return o }
 
 /* ====================== 페이지 상단 요약 ====================== */
-function sumCard(ico,title,right,chips,note){
+function sumCard(ico,title,right,chips,note,rows){
   var c=el("div","sum");
   var h=el("div","sum-h");
   h.appendChild(el("span","ico",ico));
@@ -551,8 +569,33 @@ function sumCard(ico,title,right,chips,note){
     w.appendChild(s);
   });
   c.appendChild(w);
+  if(rows&&rows.length){
+    var g=el("div","glance");
+    rows.forEach(function(r){
+      var rw=el("div","g-row"+(r.on?"":" off"));
+      rw.appendChild(el("span","gk",r.on?"✓":"·"));
+      rw.appendChild(el("span","gt",esc(r.t||"")));
+      rw.appendChild(el("span","gn",esc(r.label)+(r.names?" — "+esc(r.names):(r.on?"":" <b>미기록</b>"))));
+      if(!r.on&&!r.names) rw.lastChild.innerHTML=esc(r.label)+" — <b>미기록</b>";
+      g.appendChild(rw);
+    });
+    c.appendChild(g);
+  }
   if(note) c.appendChild(el("div","sum-note",esc(note)));
   return c;
+}
+/* 나만 보기 / 전체 보기 전환 */
+function segEl(){
+  var s=el("div","seg"), eff=(S.mine&&S.me);
+  var b1=el("button",eff?"on":"", S.me? ("👤 "+mem(S.me).name+"만 보기") : "👤 나만 보기");
+  var b2=el("button",eff?"":"on","👥 전체 보기");
+  b1.addEventListener("click",function(){
+    if(!S.me){ openMe(); return }
+    S.mine=true; LS.set("war_mine","1"); render();
+  });
+  b2.addEventListener("click",function(){ S.mine=false; LS.set("war_mine","0"); render() });
+  s.appendChild(b1); s.appendChild(b2);
+  return s;
 }
 function nowMin(){ var d=new Date(); return d.getHours()*60+d.getMinutes() }
 function toMin(t){ if(!t) return 0; var p=t.split(":"); return (+p[0])*60+(+p[1]) }
@@ -624,28 +667,42 @@ function renderToday(){
   var items=SCHEDULE.filter(function(s){ return !s.days || s.days.indexOf(dow)>=0 });
   items.sort(function(a,b){ return a.time<b.time?-1:1 });
 
-  /* --- 상단 요약 (먼저 계산) --- */
-  var gDone=0,gBlk=0,nextTxt="",nextFound=false;
+  /* --- 상단 한눈에 보기 (전체 기록) --- */
+  var gDone=0,gBlk=0,nextTxt="",nextFound=false,rows=[];
   items.forEach(function(s){
     var d=0,b=0;
-    if(s.kind==="family"){ b=FAMILIES.length;
-      FAMILIES.forEach(function(f){ if(attCount(entry(date,s.id+"__f"+f.id))>0) d++ }); }
-    else if(s.kind==="pairs"){ var ps=pairList(date); b=Math.max(1,ps.length);
-      ps.forEach(function(k){ if(attCount(entry(date,k))>0) d++ }); }
-    else { b=1; if(attCount(entry(date,s.id))>0) d=1 }
+    function add(eid,label){
+      var e=entry(date,eid), n=attCount(e)>0;
+      rows.push({on:n, t:ampm(e.t||s.time), label:label, names:n?attNames(e).join(", "):""});
+      b++; if(n) d++;
+    }
+    if(s.kind==="family") FAMILIES.forEach(function(f){ add(s.id+"__f"+f.id, f.name+" "+s.short) });
+    else if(s.kind==="pairs"){
+      var ps=pairList(date);
+      if(!ps.length){ rows.push({on:false,t:ampm(s.time),label:s.short}); b=1 }
+      else ps.forEach(function(k,i){ add(k,(i+1)+"팀 "+s.short) });
+    }
+    else add(s.id, s.short);
     gDone+=d; gBlk+=b;
     if(!nextFound && d<b){
-      var t=entry(date,s.kind==="fixed"||s.kind==="all"?s.id:s.id).t||s.time;
+      var t=entry(date,s.id).t||s.time;
       if(date!==ymd(new Date()) || toMin(t)>=nowMin()-30){ nextTxt=ampm(t)+" "+s.title; nextFound=true }
     }
   });
   var isToday=(date===ymd(new Date()));
-  p.appendChild(sumCard("🕯️","오늘의 기도 진행", isToday?"오늘":labelDate(date).replace(/<[^>]+>/g,""),[
+  p.appendChild(sumCard("🕯️","오늘의 기도 한눈에", isToday?"오늘":labelDate(date).replace(/<[^>]+>/g,""),[
     {k:"모임 기록", v:gDone+"/"+gBlk, tone:(gDone>=gBlk?"ok":"acc")},
-    {k:"남은 모임", v:Math.max(0,gBlk-gDone), tone:(gBlk-gDone>0?"warn":"ok")}
-  ], nextTxt? "다음 ▸ "+nextTxt : "오늘 예정된 모임을 모두 기록했습니다. 🙏"));
+    {k:"남음", v:Math.max(0,gBlk-gDone), tone:(gBlk-gDone>0?"warn":"ok")}
+  ], nextTxt? "다음 ▸ "+nextTxt : "오늘 예정된 모임을 모두 기록했습니다. 🙏", rows));
 
+  p.appendChild(segEl());
+
+  var shown=0;
   items.forEach(function(s){
+    /* 나만 보기: 내가 속한 모임만 */
+    if(S.mine && S.me){
+      if(s.kind==="fixed" && (s.members||[]).indexOf(S.me)<0) return;
+    }
     var card=el("div","card");
     var ch=el("div","card-h");
     ch.appendChild(el("div","ico",s.ico));
@@ -666,16 +723,21 @@ function renderToday(){
     ch.appendChild(el("span","pill"+(doneN>=blkN&&blkN>0?" done":""),doneN+"/"+blkN));
     card.appendChild(ch);
 
+    var onlyMe=(S.mine&&S.me);
     if(s.kind==="family"){
-      FAMILIES.forEach(function(f){
+      var fams = onlyMe ? FAMILIES.filter(function(f){return f.id===mem(S.me).fam}) : FAMILIES;
+      fams.forEach(function(f){
         card.appendChild(blockEl({date:date,eid:s.id+"__f"+f.id,label:f.name,
           members:famMembers(f.id).map(function(m){return m.id}),defTime:s.time}));
       });
     } else if(s.kind==="pairs"){
       var list=pairList(date);
-      if(!list.length) card.appendChild(el("div","empty","오늘의 전화 합심기도 기록이 아직 없습니다.<br>아래 버튼으로 추가하세요."));
+      if(onlyMe) list=list.filter(function(k){ var e=entry(date,k); return !!(e.a&&e.a[S.me]) });
+      if(!list.length) card.appendChild(el("div","empty",
+        onlyMe? "내가 참여한 전화 합심기도 기록이 없습니다.<br>아래 버튼으로 추가하세요."
+              : "오늘의 전화 합심기도 기록이 아직 없습니다.<br>아래 버튼으로 추가하세요."));
       list.forEach(function(eid,i){
-        card.appendChild(blockEl({date:date,eid:eid,label:(i+1)+"팀",
+        card.appendChild(blockEl({date:date,eid:eid,label:(pairList(date).indexOf(eid)+1)+"팀",
           members:MEMBERS.map(function(m){return m.id}),defTime:s.time,
           ph:"통화 기도 제목 · 나눈 내용",
           onDelete:function(){ DB.set("days/"+date+"/entries/"+eid,null); render(); }}));
@@ -683,7 +745,8 @@ function renderToday(){
       var addWrap=el("div","blk");
       var add=el("button","btn soft small","＋ 전화 합심기도 팀 추가");
       add.addEventListener("click",function(){
-        saveEntry(date,"call__"+uid(),{t:s.time,a:{},n:""}); render();
+        var a={}; if(S.me) a[S.me]=1;
+        saveEntry(date,"call__"+uid(),{t:s.time,a:a,n:""}); render();
       });
       addWrap.appendChild(add); card.appendChild(addWrap);
     } else {
@@ -700,8 +763,11 @@ function renderToday(){
         card.appendChild(rz);
       }
     }
+    shown++;
     p.appendChild(card);
   });
+  if(!shown) p.appendChild(el("div","card",
+    '<div class="empty">오늘 내가 참여하는 모임이 없습니다.<br>위의 «전체 보기»를 누르면 모든 모임을 볼 수 있습니다.</div>'));
 }
 function pairList(date){
   var es=DB.get("days/"+date+"/entries")||{}, out=[];
@@ -827,17 +893,32 @@ function renderExercise(){
   var p=$("#p-ex"); p.innerHTML="";
   var date=S.date;
 
-  var doneN=0, totMin=0, undone=[];
+  var doneN=0, totMin=0, undone=[], rows=[];
   MEMBERS.forEach(function(m){
     var e=exGet(date,m.id);
     if(e.done){ doneN++; totMin+=(+e.m||0) } else undone.push(m.name);
+    if(e.done||e.m||(e.n||"").trim())
+      rows.push({on:!!e.done, t:e.t?ampm(e.t):"", label:m.name,
+        names:((e.m?e.m+"분":"")+((e.n||"").trim()?(e.m?" · ":"")+e.n.trim():""))||"완료"});
   });
-  p.appendChild(sumCard("💪","처절한 운동", labelDate(date).replace(/<[^>]+>/g,""),[
+  p.appendChild(sumCard("💪","처절한 운동 한눈에", labelDate(date).replace(/<[^>]+>/g,""),[
     {k:"명 완료", v:doneN+"/"+MEMBERS.length, tone:(doneN>=MEMBERS.length?"ok":"acc")},
     {k:"분 운동", v:totMin, tone:"blue"},
     {k:"명 남음", v:MEMBERS.length-doneN, hide:(doneN>=MEMBERS.length), tone:"warn"}
-  ], undone.length? "아직 안 한 사람: "+undone.join(", ") : "오늘 전원 완주! 🔥 부활 승리!"));
+  ], undone.length? "아직 안 한 사람: "+undone.join(", ") : "오늘 전원 완주! 🔥 부활 승리!", rows));
 
+  p.appendChild(segEl());
+
+  if(S.mine && S.me){
+    var m=mem(S.me);
+    var card=el("div","card my");
+    card.appendChild(el("div","card-h",
+      '<div class="ico">🏃</div><div class="tt"><b>'+esc(m.name)+" 운동 기록</b><span>"+
+      esc(FAMILIES.filter(function(f){return f.id===m.fam})[0].name)+" · 오늘의 처절한 운동</span></div>"));
+    card.appendChild(exBlock(date,m));
+    p.appendChild(card);
+    return;
+  }
   FAMILIES.forEach(function(f){
     var ms=famMembers(f.id);
     var fd=0; ms.forEach(function(m){ if(exGet(date,m.id).done) fd++ });
@@ -1224,6 +1305,7 @@ function openMe(){
       var b=el("button",S.me===m.id?"on":"",esc(m.name));
       b.addEventListener("click",function(){
         S.me=m.id; LS.set("war_me",m.id); $("#ovMe").classList.remove("on");
+        if(LS.get("war_mine")!=="0") S.mine=true;
         toast(m.name+"님, 함께 기도합니다"); render();
       });
       w.appendChild(b);
